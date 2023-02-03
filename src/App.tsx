@@ -14,6 +14,10 @@ function App() {
   const [videoFile1, setVideo1] = useState<string>();
   const [videoFile2, setVideo2] = useState<string>();
   const [downloadFile, setDownloadFile] = useState<string>();
+  const [canvasSize, setCanvasSize] = useState<{
+    width: number;
+    height: number;
+  }>({ width: 0, height: 0 });
 
   const canvas = useRef<HTMLCanvasElement>(null);
   const video1 = useRef<HTMLVideoElement>(null);
@@ -30,39 +34,22 @@ function App() {
   const onChangeVideo1: ChangeEventHandler<HTMLInputElement> = (e) => {
     if (e.target.files?.[0]) {
       setVideo1(URL.createObjectURL(e.target.files[0]));
-
-      setTimeout(() => {
-        if (video1.current)
-          context?.drawImage(
-            video1.current,
-            0,
-            0,
-            video1.current.videoWidth,
-            video1.current.videoHeight
-          );
-      });
     }
   };
 
   const onChangeVideo2: ChangeEventHandler<HTMLInputElement> = (e) => {
     if (e.target.files?.[0]) {
       setVideo2(URL.createObjectURL(e.target.files[0]));
-
-      setTimeout(() => {
-        if (video1.current && video2.current)
-          context?.drawImage(
-            video2.current,
-            video1.current.videoWidth,
-            0,
-            video2.current.videoWidth,
-            video2.current.videoHeight
-          );
-      }, 100);
     }
   };
 
   const onClickStart = () => {
     if (!video1.current || !video2.current || !context || !recorder) return;
+
+    setCanvasSize({
+      width: video1.current.videoWidth + video2.current.videoWidth,
+      height: Math.max(video1.current.videoHeight, video2.current.videoHeight),
+    });
 
     video1.current.play();
     video2.current.play();
@@ -144,16 +131,6 @@ function App() {
           ) : null}
         </div>
 
-        <div className="mb-4">
-          <canvas
-            id="preview"
-            ref={canvas}
-            width={480 * 2}
-            height={300}
-            className="border-2"
-          />
-        </div>
-
         <div className="mb-8">
           <label>
             <span>動画1</span>
@@ -175,7 +152,7 @@ function App() {
           </label>
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex gap-4 mb-8">
           <button
             className="py-2 px-8 bg-white text-black rounded-lg"
             type="button"
@@ -200,6 +177,17 @@ function App() {
               ダウンロード
             </a>
           ) : null}
+        </div>
+
+        <div>
+          {
+            <canvas
+              id="preview"
+              ref={canvas}
+              width={canvasSize.width}
+              height={canvasSize.height}
+            />
+          }
         </div>
       </div>
     </div>
