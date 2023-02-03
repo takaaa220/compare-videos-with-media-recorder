@@ -37,8 +37,8 @@ function App() {
             video1.current,
             0,
             0,
-            video1.current.width,
-            video1.current.height
+            video1.current.videoWidth,
+            video1.current.videoHeight
           );
       });
     }
@@ -52,10 +52,10 @@ function App() {
         if (video1.current && video2.current)
           context?.drawImage(
             video2.current,
-            video1.current.width,
+            video1.current.videoWidth,
             0,
-            video2.current.width,
-            video2.current.height
+            video2.current.videoWidth,
+            video2.current.videoHeight
           );
       }, 100);
     }
@@ -74,15 +74,15 @@ function App() {
         video1.current,
         0,
         0,
-        video1.current.width,
-        video1.current.height
+        video1.current.videoWidth,
+        video1.current.videoHeight
       );
       context?.drawImage(
         video2.current,
-        video1.current.width,
+        video1.current.videoWidth,
         0,
-        video2.current.width,
-        video2.current.height
+        video2.current.videoWidth,
+        video2.current.videoHeight
       );
     }, 1000 / 30);
 
